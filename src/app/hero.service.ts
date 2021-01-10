@@ -26,6 +26,16 @@ export class HeroService {
       );
   }
 
+  /** GET heroes from the server by filters */
+  getHeroesByFilter(lowerFilter: number, upperFilter: number): Observable<Hero[]> {
+    
+    return this.http.get<Hero[]>(`${this.heroesUrl}/?lowerFilter=${lowerFilter}&upperFilter=${upperFilter}`)
+      .pipe(
+          tap(_ => this.log(`fetched heroes by lowerFilter=${lowerFilter} upperFilter=${upperFilter}`)),
+          catchError(this.handleError<Hero[]>(`getHeroes lowerFilter=${lowerFilter} upperFilter=${upperFilter}`, []))
+      );
+  }
+
   /** GET hero by id. Will 404 if id not found */
   getHero(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/${id}`;

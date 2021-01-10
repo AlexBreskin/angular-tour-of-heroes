@@ -1,60 +1,46 @@
-import { GetHeroes, HeroAction, heroActionTypes, messageActionTypes } from './app.actions';
+import { AppAction, appActionTypes } from './app.actions';
 import { environment } from '../../environments/environment';
 import { Hero } from '../hero';
 import { HEROES } from '../mock-heroes';
 
 
-export interface HeroState {
-  heroes: Hero[]
+export interface AppState {
+  selectedHero: Hero;
+  heroes: Hero[];
+  messages: string[];
 }
 
-export const HeroInitialState: HeroState = {
-  heroes: HEROES
-}
-
-export interface MessageState {
-  messages: string[]
-}
-
-export const MessageInitialState: MessageState = {
+export const AppInitialState: AppState = {
+  selectedHero: null,
+  heroes: HEROES,
   messages: []
 }
 
-export function heroReducer(
-  state: HeroState = HeroInitialState,
-  action: HeroAction
-): HeroState {
+export function appReducer(
+  state: AppState = AppInitialState,
+  action: AppAction
+): AppState {
   switch (action.type)
   {
-    case heroActionTypes.GET_HEROES: {
+    case appActionTypes.GET_HEROES: {
       return {
         ...state
       };
     }
     //Nothing for Get Heroes Failure yet
-    case heroActionTypes.GET_HEROES_SUCCESS: {
+    case appActionTypes.GET_HEROES_SUCCESS: {
       return {
         ...state,
         heroes: [...state.heroes].concat(action.payload)
       };
     }
-    case heroActionTypes.DELETE_HERO: {
+    case appActionTypes.DELETE_HERO: {
       return {
-        
+        ...state,
+        heroes: state.heroes.filter(o => o.id == action.payload)
       }
     }
-  }
-}
-
-export function messageReducer(
-  action: GetHeroes
-): HeroState {
-  switch (action.type)
-  {
-    case messageActionTypes.GET_MESSAGES: {
-      return {
-        
-      }
-    }
+    default:
+      return state;
   }
 }

@@ -13,7 +13,7 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data.service';
 import { HeroSearchComponent } from './hero-search/hero-search.component';
 import { StoreModule } from '@ngrx/store';
-import { initialState as heroInitialState, heroReducer } from './+state/app.reducers';
+import { AppInitialState, appReducer } from './+state/app.reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
@@ -41,14 +41,12 @@ import { AppEffects } from './+state/app.effects';
       InMemoryDataService, { dataEncapsulation: false }
     ),
     
-    StoreModule.forRoot({ app: heroReducer }, 
+    StoreModule.forRoot(
+      { app: appReducer }, 
       {
-        initialState: { app: heroInitialState }
+        initialState: { app: AppInitialState }
       }
     ),
-    
-    !environment.production ? StoreDevtoolsModule.instrument() : [],
-    
     EffectsModule.forRoot([AppEffects])
   ],
   providers: [],

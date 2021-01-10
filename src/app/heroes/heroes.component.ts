@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Store, select } from '@ngrx/store';      
+import { Observable } from 'rxjs';
+import { appActionTypes } from '../+state/app.actions';
+import { appQuery } from '../+state/app.selectors';
 import { Hero } from '../hero';
-import { HeroService } from '../hero.service';
-import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-heroes',
@@ -10,30 +12,30 @@ import { MessageService } from '../message.service';
 })
 export class HeroesComponent implements OnInit {
 
-  heroes: Hero[];
+  heroes$: Observable<Hero[]>;
 
-  constructor(private heroService: HeroService, private messageService: MessageService) {}
+  constructor(private store: Store<{ heroes: Hero[] }>) { 
+  }
   
   ngOnInit(): void {
     this.getHeroes();
   }
 
   getHeroes(): void {
-    this.heroService.getHeroes()
-        .subscribe(heroes => this.heroes = heroes);
+    this.heroes$ = this.store.pipe(select(appQuery.getHeroes));
   }
 
   add(name: string): void {
-    name = name.trim();
+    /*name = name.trim();
     if (!name) { return; }
     this.heroService.addHero({ name } as Hero)
       .subscribe(hero => {
         this.heroes.push(hero);
-      });
+      });*/
   }
 
   delete(hero: Hero): void {
-    this.heroes = this.heroes.filter(h => h !== hero);
-    this.heroService.deleteHero(hero).subscribe();
+    /*this.heroes = this.heroes.filter(h => h !== hero);
+    this.heroService.deleteHero(hero).subscribe();*/
   }
 }
